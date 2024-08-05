@@ -9,6 +9,18 @@ function aatp_log($message) {
     $upload_dir = wp_upload_dir();
     $log_file = $upload_dir['basedir'] . '/aatp_log.txt';
 
+    // Check if log file is writable or can be created
+    if (!file_exists($log_file)) {
+        if (!is_writable($upload_dir['basedir'])) {
+            error_log("AATP: Log directory is not writable.");
+            return;
+        }
+        if (!touch($log_file)) {
+            error_log("AATP: Log file cannot be created.");
+            return;
+        }
+    }
+
     if (!is_writable($log_file)) {
         error_log("AATP: Log file is not writable.");
         return;

@@ -7,6 +7,7 @@ function aatp_update_alt_text() {
     $post_limit = get_option('aatp_post_limit');
     $selected_post_id = get_option('aatp_post_select');
     $allowed_post_types = get_option('aatp_allowed_post_types', 'capabilities,consulting-services');
+    $batch_size = get_option('aatp_batch_size', 100);
     $allowed_post_types_array = explode(',', $allowed_post_types);
 
     $args = [
@@ -16,15 +17,14 @@ function aatp_update_alt_text() {
     ];
 
     if (!empty($post_limit)) {
-        $args['post__in'] = explode(',', $post_limit);
+        $args['post__in'] = array_map('intval', explode(',', $post_limit));
     }
 
     if (!empty($selected_post_id)) {
-        $args['post__in'] = [$selected_post_id];
+        $args['post__in'] = [intval($selected_post_id)];
     }
 
     $offset = 0;
-    $batch_size = 100; // Adjust batch size as needed
 
     do {
         $args['posts_per_page'] = $batch_size;
@@ -51,7 +51,7 @@ function aatp_update_alt_text() {
             foreach ($matches[0] as $img_tag) {
                 preg_match('/wp-image-([0-9]+)/i', $img_tag, $img_id_match);
                 if (isset($img_id_match[1])) {
-                    $img_id = $img_id_match[1];
+                    $img_id = intval($img_id_match[1]);
                     $alt_text = get_post_meta($img_id, '_wp_attachment_image_alt', true);
                     if (empty($alt_text)) {
                         $new_alt_text = aatp_generate_alt_text($post); // Use custom function to generate alt text

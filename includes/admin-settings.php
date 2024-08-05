@@ -17,7 +17,7 @@ function aatp_settings_page_html() {
         return;
     }
 
-    if (isset($_POST['aatp_logging_enabled']) || isset($_POST['aatp_post_limit']) || isset($_POST['aatp_post_select']) || isset($_POST['aatp_allowed_post_types']) || isset($_POST['clear_log']) || isset($_POST['download_log']) || isset($_POST['update_alt_text'])) {
+    if (isset($_POST['aatp_logging_enabled']) || isset($_POST['aatp_post_limit']) || isset($_POST['aatp_post_select']) || isset($_POST['aatp_allowed_post_types']) || isset($_POST['aatp_batch_size']) || isset($_POST['clear_log']) || isset($_POST['download_log']) || isset($_POST['update_alt_text'])) {
         check_admin_referer('aatp_settings');
         if (isset($_POST['aatp_logging_enabled'])) {
             update_option('aatp_logging_enabled', isset($_POST['aatp_logging_enabled']) ? '1' : '0');
@@ -34,6 +34,15 @@ function aatp_settings_page_html() {
         if (isset($_POST['aatp_allowed_post_types'])) {
             update_option('aatp_allowed_post_types', sanitize_text_field($_POST['aatp_allowed_post_types']));
             echo '<div class="updated"><p>Allowed post types saved.</p></div>';
+        }
+        if (isset($_POST['aatp_batch_size'])) {
+            $batch_size = intval($_POST['aatp_batch_size']);
+            if ($batch_size > 0) {
+                update_option('aatp_batch_size', $batch_size);
+                echo '<div class="updated"><p>Batch size saved.</p></div>';
+            } else {
+                echo '<div class="error"><p>Batch size must be a positive integer.</p></div>';
+            }
         }
     }
 
@@ -65,6 +74,12 @@ function aatp_settings_page_html() {
                     <th scope="row">Allowed Post Types (comma-separated)</th>
                     <td>
                         <input type="text" name="aatp_allowed_post_types" value="<?php echo esc_attr(get_option('aatp_allowed_post_types', 'capabilities,consulting-services')); ?>" />
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Batch Size</th>
+                    <td>
+                        <input type="number" name="aatp_batch_size" value="<?php echo esc_attr(get_option('aatp_batch_size', '100')); ?>" />
                     </td>
                 </tr>
             </table>

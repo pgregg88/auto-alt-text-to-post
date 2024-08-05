@@ -2,7 +2,7 @@
 /*
 Plugin Name: Auto Alt Text to Posts
 Description: Automatically updates image alt text for posts based on a button trigger in the settings page.
-Version: 1.0
+Version: 1.2
 Author: Preston Gregg
 */
 
@@ -19,6 +19,9 @@ function aatp_activate() {
     }
     if (get_option('aatp_allowed_post_types') === false) {
         add_option('aatp_allowed_post_types', 'capabilities,consulting-services');
+    }
+    if (get_option('aatp_batch_size') === false) {
+        add_option('aatp_batch_size', '100');
     }
 }
 register_activation_hook(__FILE__, 'aatp_activate');
