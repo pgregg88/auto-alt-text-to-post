@@ -1,0 +1,16 @@
+.DS_Store
+._*
+Thumbs.db
+.Spotlight-V100
+.Trashes
+.TemporaryItems
+.AppleDouble
+assets
+.git/
+languages
+templates
+LICENSE
+README.md
+.gitignore
+deploy.sh
+git-deploy.sh
